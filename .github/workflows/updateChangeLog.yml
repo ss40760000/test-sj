@@ -1,0 +1,40 @@
+name: Update ChangeLog on Branch Creation
+
+on:
+  create:
+    branches:
+      - release/QA-*
+
+jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # To fetch all history for changelog
+
+    - name: Set up Git
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+
+    - name: Get new commits from develop
+      run: |
+        git checkout develop
+        git pull origin develop
+        git log --oneline HEAD...HEAD~10 > new_commits.txt
+
+    - name: Update ChangeLog.md
+      run: |
+        echo "## Release $(date +'%Y-%m-%d')" >> CHANGELOG.md
+        cat new_commits.txt >> CHANGELOG.md
+        echo "" >> CHANGELOG.md
+
+    - name: Commit and push changeLog.md
+      run: |
+        git checkout -b ${{ github.ref_name }}
+        git add CHANGELOG.md
+        git commit -m "Update changeLog.md for branch ${{ github.ref_name }}"
+        git push origin ${{ github.ref_name }}
