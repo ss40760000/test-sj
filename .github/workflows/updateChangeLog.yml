@@ -20,11 +20,13 @@ jobs:
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@github.com"
 
+    - name: Fetch develop branch
+      run: |
+        git fetch origin develop:develop
+
     - name: Get new commits from develop
       run: |
-        git checkout develop
-        git pull origin develop
-        git log --oneline HEAD...HEAD~10 > new_commits.txt
+        git log origin/develop -n 10 --oneline > new_commits.txt
 
     - name: Update ChangeLog.md
       run: |
