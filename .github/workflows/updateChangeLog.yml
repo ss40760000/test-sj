@@ -8,7 +8,9 @@ on:
 jobs:
   update-changelog:
     runs-on: ubuntu-latest
-
+    permissions:                # Job-level permissions configuration starts here
+      contents: write           # 'write' access to repository contents
+      pull-requests: write      # 'write' access to pull requests
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
