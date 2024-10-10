@@ -1,4 +1,4 @@
-name: Update ChangeLog on Branch Creation
+name: Update ChangeLog on Release Branch Creation
 
 on:
   create:
@@ -8,14 +8,14 @@ on:
 jobs:
   update-changelog:
     runs-on: ubuntu-latest
-    permissions:                # Job-level permissions configuration starts here
-      contents: write           # 'write' access to repository contents
-      pull-requests: write      # 'write' access to pull requests
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0 # To fetch all history for changelog
+        fetch-depth: 0
 
     - name: Set up Git
       run: |
@@ -30,7 +30,7 @@ jobs:
       run: |
         git log origin/develop -n 10 --oneline > new_commits.txt
 
-    - name: Update ChangeLog.md
+    - name: Update CHANGELOG.md
       run: |
         echo "## Release $(date +'%Y-%m-%d')" >> CHANGELOG.md
         cat new_commits.txt >> CHANGELOG.md
@@ -39,9 +39,9 @@ jobs:
     - name: Commit changes
       run: |
         git add CHANGELOG.md
-        git commit -m "Update changeLog.md for branch ${{ github.ref_name }}"
+        git commit -m "Update CHANGELOG.md for ${{ github.ref_name }}"
 
-    - name: Push changeLog.md to release
+    - name: Push CHANGELOG.md to release
       uses: ad-m/github-push-action@master
       with:
         branch: ${{ github.ref_name }}
