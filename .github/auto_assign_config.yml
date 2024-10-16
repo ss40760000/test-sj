@@ -7,7 +7,6 @@
  # reviewers로 지정할 대상 (GitHub user name)
  reviewers:
    - djpark0402
-   - ss4076
    - k3255
 
  # 지정한 숫자만큼 리뷰어가 등록
